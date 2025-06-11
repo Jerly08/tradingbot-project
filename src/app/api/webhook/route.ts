@@ -80,7 +80,8 @@ export async function POST(request: NextRequest) {
     );
     
     // Simulate the order on Binance testnet
-    const orderResult = await simulateOrder(
+    // Result is not used directly but operation is needed
+    await simulateOrder(
       symbol,
       action,
       activeConfig.leverage,

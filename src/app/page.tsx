@@ -19,14 +19,14 @@ export default function Home() {
   // Fetch config and orders
   const { 
     data: config, 
-    error: configError, 
+    error: _configError, 
     isLoading: configLoading,
     mutate: mutateConfig
   } = useSWR<IConfig>('/api/config', fetcher);
   
   const { 
     data: orders, 
-    error: ordersError, 
+    error: _ordersError, 
     isLoading: ordersLoading,
     mutate: mutateOrders
   } = useSWR<IOrder[]>('/api/orders', fetcher);

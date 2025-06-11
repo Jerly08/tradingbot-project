@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
-import ConfigModel, { IConfig } from '@/models/ConfigModel';
+import ConfigModel from '@/models/ConfigModel';
 
 // GET handler to get the active configuration
 export async function GET() {

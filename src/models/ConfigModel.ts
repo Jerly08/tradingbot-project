@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 // Define the type for the config document
 export interface IConfig {
+  _id?: string;
   symbol: string;
   timeframe: string;
   plusDIThreshold: number;
