@@ -70,7 +70,7 @@ Aplikasi ini dapat di-deploy ke Vercel dengan mudah. Pastikan untuk mengatur env
 Untuk menggunakan aplikasi ini dengan TradingView:
 
 1. Buat alert di TradingView yang mengirimkan nilai DMI/ADX
-2. Gunakan webhook URL: `https://your-app-url.vercel.app/api/webhook`
+2. Gunakan webhook URL: `https://tradingbot-project.vercel.app/api/webhook`
 3. Format payload yang dikirim:
 
 ```json
@@ -122,7 +122,7 @@ Untuk mensimulasikan sinyal trading tanpa menggunakan TradingView:
 1. **Persiapan Postman**:
    - Download dan install [Postman](https://www.postman.com/downloads/)
    - Buat request baru dengan metode POST
-   - Masukkan URL webhook: `http://localhost:3000/api/webhook` (development) atau `https://your-app-url.vercel.app/api/webhook` (production)
+   - Masukkan URL webhook: `https://tradingbot-project.vercel.app/api/webhook` (production) atau `http://localhost:3000/api/webhook` (development)
    - Set header `Content-Type: application/json`
 
 2. **Simulasi Sinyal BUY**:
