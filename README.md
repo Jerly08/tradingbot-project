@@ -194,6 +194,4 @@ Order akan disimpan di database dan ditampilkan di dashboard "Order History". Pe
 - `slPrice`: Harga Stop Loss (dihitung dari entryPrice - stopLossPercent%)
 - `status`: Status order (selalu "OPEN" untuk simulasi)
 
-## Lisensi
 
-MIT
