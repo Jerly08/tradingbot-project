@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Trading Bot dengan DMI/ADX Strategy
 
-## Getting Started
+Aplikasi web untuk mengonfigurasi dan menjalankan strategi trading otomatis berdasarkan indikator DMI/ADX. Terintegrasi dengan TradingView untuk sinyal dan Binance untuk simulasi trading.
 
-First, run the development server:
+## Fitur
+
+- Form input strategi dan pengaturan risiko
+- Tampilan konfigurasi aktif
+- Webhook untuk menerima sinyal dari TradingView
+- Validasi sinyal trading berdasarkan DMI/ADX
+- Simulasi order dengan Take Profit dan Stop Loss
+- Riwayat order trading
+
+## Teknologi
+
+- Frontend: Next.js dengan Tailwind CSS
+- Backend: Next.js API Routes (Serverless)
+- Database: MongoDB Atlas
+- Integrasi: Binance API (Testnet)
+
+## Pengaturan Default
+
+| Parameter | Nilai Default |
+|-----------|---------------|
+| Symbol | BTCUSDT |
+| Timeframe | 5m |
+| +DI Threshold | 25 |
+| –DI Threshold | 20 |
+| ADX Minimum | 20 |
+| Take Profit (%) | 2 |
+| Stop Loss (%) | 1 |
+| Leverage | 10x |
+
+## Instalasi
+
+1. Clone repositori ini
+2. Install dependensi:
+
+```bash
+npm install
+```
+
+3. Buat file `.env.local` dengan konfigurasi MongoDB dan Binance API:
+
+```
+# MongoDB Configuration
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/trading_bot
+MONGODB_TIMEOUT=20000
+
+# Binance API Configuration
+BINANCE_API_KEY=your_binance_testnet_api_key
+BINANCE_API_SECRET=your_binance_testnet_api_secret
+
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+4. Jalankan aplikasi dalam mode development:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Aplikasi ini dapat di-deploy ke Vercel dengan mudah. Pastikan untuk mengatur environment variables yang sama di dashboard Vercel.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## TradingView Webhook Setup
 
-## Learn More
+Untuk menggunakan aplikasi ini dengan TradingView:
 
-To learn more about Next.js, take a look at the following resources:
+1. Buat alert di TradingView yang mengirimkan nilai DMI/ADX
+2. Gunakan webhook URL: `https://your-app-url.vercel.app/api/webhook`
+3. Format payload yang dikirim:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```json
+{
+  "symbol": "BTCUSDT",
+  "plusDI": 27.5,
+  "minusDI": 15.0,
+  "adx": 25.0,
+  "timeframe": "5m"
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Mendapatkan API Key Binance Testnet
 
-## Deploy on Vercel
+1. Kunjungi [Binance Testnet](https://testnet.binancefuture.com/)
+2. Daftar akun dan login
+3. Buka "API Management" dan buat API key baru
+4. Salin API Key dan Secret key ke file `.env.local`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Aturan Trading
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- BUY jika:
+  - +DI > threshold
+  - –DI < threshold
+  - ADX > minimum
+- SELL jika:
+  - +DI < threshold
+  - –DI > threshold
+  - ADX > minimum
+
+## Lisensi
+
+MIT
