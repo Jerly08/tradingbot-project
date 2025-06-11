@@ -101,6 +101,99 @@ Untuk menggunakan aplikasi ini dengan TradingView:
   - –DI > threshold
   - ADX > minimum
 
+## Cara Mensimulasikan Trading Bot
+
+Ada dua cara untuk mensimulasikan trading bot ini:
+
+### 1. Menggunakan Dashboard Web
+
+1. **Konfigurasi Strategi**:
+   - Buka aplikasi di browser: `http://localhost:3000` (development) atau URL Vercel (production)
+   - Isi parameter strategi trading di form konfigurasi
+   - Klik "Save Configuration" untuk menyimpan
+
+2. **Lihat Tab Order History**:
+   - Klik tab "Order History" untuk melihat riwayat order yang telah disimulasikan
+
+### 2. Simulasi Manual dengan Postman
+
+Untuk mensimulasikan sinyal trading tanpa menggunakan TradingView:
+
+1. **Persiapan Postman**:
+   - Download dan install [Postman](https://www.postman.com/downloads/)
+   - Buat request baru dengan metode POST
+   - Masukkan URL webhook: `http://localhost:3000/api/webhook` (development) atau `https://your-app-url.vercel.app/api/webhook` (production)
+   - Set header `Content-Type: application/json`
+
+2. **Simulasi Sinyal BUY**:
+   - Tambahkan body request JSON:
+   ```json
+   {
+     "symbol": "BTCUSDT",
+     "plusDI": 30,
+     "minusDI": 15,
+     "adx": 25,
+     "timeframe": "5m"
+   }
+   ```
+   - Klik "Send" untuk mengirim request
+
+3. **Simulasi Sinyal SELL**:
+   - Ubah nilai untuk mensimulasikan kondisi SELL:
+   ```json
+   {
+     "symbol": "BTCUSDT",
+     "plusDI": 15,
+     "minusDI": 30,
+     "adx": 25,
+     "timeframe": "5m"
+   }
+   ```
+   - Klik "Send" untuk mengirim request
+
+4. **Lihat Hasil Simulasi**:
+   - Periksa respons dari API yang akan menampilkan detail order simulasi
+   - Buka dashboard web dan lihat di tab "Order History" untuk melihat order yang baru dibuat
+
+### 3. Memahami Hasil Simulasi
+
+Setelah mengirim sinyal dengan Postman, Anda akan menerima respons seperti ini:
+
+```json
+{
+  "success": true,
+  "message": "Successfully processed BUY signal",
+  "data": {
+    "signal": "BUY",
+    "order": {
+      "symbol": "BTCUSDT",
+      "action": "BUY",
+      "priceEntry": 66421.35,
+      "tpPrice": 67749.78,
+      "slPrice": 65757.14,
+      "leverage": "10x",
+      "timeframe": "5m",
+      "status": "OPEN"
+    },
+    "conditions": {
+      "plusDI": 30,
+      "minusDI": 15,
+      "adx": 25,
+      "plusDIThreshold": 25,
+      "minusDIThreshold": 20,
+      "adxMinimum": 20
+    }
+  }
+}
+```
+
+Order akan disimpan di database dan ditampilkan di dashboard "Order History". Perhatikan bahwa:
+
+- `priceEntry`: Harga saat ini dari Binance Testnet
+- `tpPrice`: Harga Take Profit (dihitung dari entryPrice + takeProfitPercent%)
+- `slPrice`: Harga Stop Loss (dihitung dari entryPrice - stopLossPercent%)
+- `status`: Status order (selalu "OPEN" untuk simulasi)
+
 ## Lisensi
 
 MIT
