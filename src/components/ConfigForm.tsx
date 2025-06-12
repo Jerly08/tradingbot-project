@@ -8,6 +8,18 @@ interface ConfigFormProps {
   onSuccess: (data: IConfig) => void;
 }
 
+// Default initial values for the trading strategy
+const initialDefaults: IConfig = {
+  symbol: 'BTCUSDT',
+  timeframe: '5m',
+  plusDIThreshold: 25,
+  minusDIThreshold: 20,
+  adxMinimum: 20,
+  takeProfitPercent: 2,
+  stopLossPercent: 1,
+  leverage: 10,
+};
+
 export default function ConfigForm({ defaultValues, onSuccess }: ConfigFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -38,6 +50,16 @@ export default function ConfigForm({ defaultValues, onSuccess }: ConfigFormProps
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Reset to factory defaults
+  const handleResetToDefaults = () => {
+    reset(initialDefaults);
+  };
+
+  // Reset to last saved values
+  const handleResetToSaved = () => {
+    reset(defaultValues);
   };
 
   return (
@@ -203,13 +225,22 @@ export default function ConfigForm({ defaultValues, onSuccess }: ConfigFormProps
           >
             {isSubmitting ? 'Saving...' : 'Save Configuration'}
           </button>
-          <button
-            type="button"
-            onClick={() => reset(defaultValues)}
-            className="ml-4 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded"
-          >
-            Reset
-          </button>
+          <div className="inline-flex mt-4 sm:mt-0 ml-4">
+            <button
+              type="button"
+              onClick={handleResetToSaved}
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-l"
+            >
+              Reset to Saved
+            </button>
+            <button
+              type="button"
+              onClick={handleResetToDefaults}
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-r border-l border-gray-400"
+            >
+              Reset to Defaults
+            </button>
+          </div>
         </div>
       </form>
     </div>
