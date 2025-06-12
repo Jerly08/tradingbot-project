@@ -15,16 +15,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            if (typeof window !== 'undefined' && !window.ethereum) {
-              window.ethereum = null;
-              console.log('MetaMask polyfill loaded');
-            }
-          `
-        }} />
-      </head>
       <body className={inter.className}>
         {children}
       </body>

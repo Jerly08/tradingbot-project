@@ -8,6 +8,7 @@ import ActiveConfig from '@/components/ActiveConfig';
 import OrderTable from '@/components/OrderTable';
 import { IConfig } from '@/models/ConfigModel';
 import { IOrder } from '@/models/OrderModel';
+import ClientOnly from '@/components/ClientOnly';
 
 // Fetcher function for SWR
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.data);
@@ -15,6 +16,15 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data.data);
 export default function Home() {
   // State for active section (config or orders)
   const [activeSection, setActiveSection] = useState<'config' | 'orders'>('config');
+  
+  // MetaMask polyfill
+  useEffect(() => {
+    // This runs only on the client
+    if (typeof window !== 'undefined' && !window.ethereum) {
+      window.ethereum = null;
+      console.log('MetaMask polyfill loaded (client-side)');
+    }
+  }, []);
   
   // Fetch config and orders
   const { 
@@ -97,10 +107,12 @@ export default function Home() {
             <>
               {/* Configuration Section */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <ConfigForm 
-                  defaultValues={config || defaultConfig} 
-                  onSuccess={handleConfigUpdate} 
-                />
+                <ClientOnly>
+                  <ConfigForm 
+                    defaultValues={config || defaultConfig} 
+                    onSuccess={handleConfigUpdate} 
+                  />
+                </ClientOnly>
                 <ActiveConfig 
                   config={config || defaultConfig}
                   isLoading={configLoading}
@@ -111,9 +123,11 @@ export default function Home() {
               <div className="bg-white p-6 rounded-lg shadow-md mt-8">
                 <h2 className="text-2xl font-bold mb-4">TradingView Webhook Setup</h2>
                 <p className="mb-4">To receive signals from TradingView, use the following webhook URL in your alerts:</p>
-                <code className="block bg-gray-100 p-4 rounded">
-                  {`${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/api/webhook`}
-                </code>
+                <ClientOnly>
+                  <code className="block bg-gray-100 p-4 rounded">
+                    {`${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/api/webhook`}
+                  </code>
+                </ClientOnly>
                 <p className="mt-4">Example payload format:</p>
                 <pre className="bg-gray-100 p-4 rounded overflow-x-auto">
                   {JSON.stringify({
