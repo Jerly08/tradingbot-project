@@ -43,9 +43,12 @@ export async function GET() {
 // POST handler to save a new configuration
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/config: Attempting to connect to database');
     await connectToDatabase();
     
+    console.log('POST /api/config: Connected to database successfully');
     const body = await request.json();
+    console.log('POST /api/config: Received data:', JSON.stringify(body));
     
     // Validate required fields
     const requiredFields = [
@@ -61,6 +64,7 @@ export async function POST(request: NextRequest) {
     
     for (const field of requiredFields) {
       if (body[field] === undefined) {
+        console.log(`POST /api/config: Missing required field: ${field}`);
         return NextResponse.json(
           { success: false, message: `Missing required field: ${field}` },
           { status: 400 }
@@ -72,7 +76,9 @@ export async function POST(request: NextRequest) {
     const { _id, ...configData } = body;
     
     // Create a new configuration with fresh data only
+    console.log('POST /api/config: Creating new config in database');
     const newConfig = await ConfigModel.create(configData);
+    console.log('POST /api/config: Config created successfully:', JSON.stringify(newConfig));
     
     return NextResponse.json({
       success: true,
@@ -80,6 +86,12 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error saving configuration:', error);
+    // Log more detailed error information
+    if (error instanceof Error) {
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
     return NextResponse.json(
       { success: false, message: 'Failed to save configuration' },
       { status: 500 }

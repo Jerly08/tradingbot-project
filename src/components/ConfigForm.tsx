@@ -41,12 +41,36 @@ export default function ConfigForm({ defaultValues, onSuccess }: ConfigFormProps
       // Remove _id field if it exists to prevent duplicate key errors
       const { _id, ...configData } = data;
       
+      console.log('Sending configuration data to server:', configData);
       const response = await axios.post('/api/config', configData);
+      console.log('Server response:', response.data);
+      
       onSuccess(response.data.data);
       reset(response.data.data);
     } catch (err) {
       console.error('Error saving configuration:', err);
-      setError('Failed to save configuration. Please try again.');
+      
+      // More detailed error handling
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Response data:', err.response.data);
+          console.error('Response status:', err.response.status);
+          
+          const errorMessage = err.response.data?.message || 'Server returned an error';
+          setError(`Failed to save configuration: ${errorMessage} (Status: ${err.response.status})`);
+        } else if (err.request) {
+          // The request was made but no response was received
+          console.error('No response received:', err.request);
+          setError('Failed to save configuration: No response from server. Please check your network connection.');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          setError(`Failed to save configuration: ${err.message}`);
+        }
+      } else {
+        setError('Failed to save configuration. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
